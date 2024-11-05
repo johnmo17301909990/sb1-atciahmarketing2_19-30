@@ -1,0 +1,36 @@
+// This is your Prisma schema file
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Platform {
+  id        String   @id @default(cuid())
+  name      String
+  type      String   // 'tmall' | 'jd'
+  status    String   // 'active' | 'inactive'
+  apiKey    String?
+  apiSecret String?
+  lastSync  DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  analytics Analytics[]
+}
+
+model Analytics {
+  id         String   @id @default(cuid())
+  platformId String
+  platform   Platform @relation(fields: [platformId], references: [id])
+  type       String   // 'traffic' | 'sales' | 'products' etc.
+  dateRange  String
+  data       Json
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([platformId, type, dateRange])
+}

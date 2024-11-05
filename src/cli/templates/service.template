@@ -1,0 +1,49 @@
+import { supabase } from '../lib/supabase';
+
+export const {{serviceName}}Service = {
+  async getAll() {
+    const { data, error } = await supabase
+      .from('{{serviceName}}')
+      .select('*');
+
+    if (error) throw error;
+    return data;
+  },
+
+  async getById(id: string) {
+    const { data, error } = await supabase
+      .from('{{serviceName}}')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
+
+  async create(data: any) {
+    const { error } = await supabase
+      .from('{{serviceName}}')
+      .insert([data]);
+
+    if (error) throw error;
+  },
+
+  async update(id: string, data: any) {
+    const { error } = await supabase
+      .from('{{serviceName}}')
+      .update(data)
+      .eq('id', id);
+
+    if (error) throw error;
+  },
+
+  async delete(id: string) {
+    const { error } = await supabase
+      .from('{{serviceName}}')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+  }
+};
